@@ -79,6 +79,10 @@ mv /home /ro/
 echo Cleaning up and creating mountpoints
 rm -rf /media
 mkdir /home /var /media 
+if [ -d /tmp ]
+then
+  rm -rf /tmp/*
+fi
 if [ -d /tmpfs ]
 then
   rm -rf /tmpfs
