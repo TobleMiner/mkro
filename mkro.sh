@@ -79,11 +79,11 @@ mv /home /ro/
 echo Cleaning up and creating mountpoints
 rm -rf /media
 mkdir /home /var /media 
-if [ -d /tmp ]
+if [ -d /tmpfs ]
 then
-  rm -rf /tmp
-  mkdir /tmp
+  rm -rf /tmpfs
 fi
+mkdir /tmpfs /tmpfs/var /tmpfs/home
 
 FSTAB_LOC="/etc/"
 FSTAB=$FSTAB_LOC'fstab'
