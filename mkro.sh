@@ -17,14 +17,18 @@ fi
 
 sda_main=${1-sda1}
 sda_swap=${2-sda5}
-tmpfs_size=${3-512M}
-media_size=${4-16M}
+var_size=${3-256M}
+home_size=${4-256M}
+tmp_size=${5-64M}
+media_size=${6-16M}
 
 uff_installed=$(dpkg --list | grep unionfs-fuse)
 
 echo $sda_main will be configured as redonly
 echo $sda_swap will be configured to swap
-echo 'tmpfs for /var and /home will have a size of '$tmpfs_size
+echo 'tmpfs for /var will have a size of '$var_size
+echo 'tmpfs for /home will have a size of '$home_size
+echo 'tmpfs for /tmp will have a size of '$tmp_size
 echo 'tmpfs for /media will have a size of '$media_size
 if [ -z "$uff_installed" ]
 then
@@ -92,10 +96,12 @@ echo Rewriting fstab
 #This code is really, really dangerous!
 echo 'UUID='$uuid_main' / ext4 defaults,noatime,ro 0 1' > $FSTAB
 echo 'UUID='$uuid_swap' / swap sw 0 0' >> $FSTAB
-echo 'tmpfs /tmp tmpfs defaults,size='$tmpfs_size' 0 0' >> $FSTAB
+echo 'tmpfs /tmpfs/var tmpfs defaults,size='$var_size' 0 0' >> $FSTAB
+echo 'tmpfs /tmpfs/home tmpfs defaults,size='$home_size' 0 0' >> $FSTAB
+echo 'tmpfs /tmp tmpfs defaults,size='$tmp_size' 0 0' >> $FSTAB
 echo 'tmpfs /media  tmpfs defaults,size='$media_size' 0 0' >> $FSTAB
-echo 'unionfs-fuse#/tmp=rw:/ro/var=ro /var fuse cow,allow_other,nonempty' >> $FSTAB
-echo 'unionfs-fuse#/tmp=rw:/ro/home=ro /home fuse cow,allow_other' >> $FSTAB
+echo 'unionfs-fuse#/tmpfs/var=rw:/ro/var=ro /var fuse cow,allow_other,nonempty' >> $FSTAB
+echo 'unionfs-fuse#/tmpfs/home=rw:/ro/home=ro /home fuse cow,allow_other' >> $FSTAB
 
 echo fstab rewrite complete
 
