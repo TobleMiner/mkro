@@ -2,6 +2,9 @@
 
 echo '(c) by Tobas Schramm 2014'
 
+FALSE="false"
+TRUE="true"
+
 function uuid
 {
   echo $(blkid /dev/$1 | grep -o '[0-9a-fA-F]\{8\}-[0-9a-fA-F]\{4\}-[0-9a-fA-F]\{4\}-[0-9a-fA-F]\{4\}-[0-9a-fA-F]\{12\}')
@@ -21,6 +24,7 @@ var_size=${3-256M}
 home_size=${4-256M}
 tmp_size=${5-64M}
 media_size=${6-16M}
+noprompt=${7-$FALSE}
 
 uff_installed=$(dpkg --list | grep unionfs-fuse)
 
@@ -36,11 +40,14 @@ then
 fi
 echo
 
-read -p 'Do you wish to continue? [Y/n]' yn
-case $yn in
-  [Y]* ) ;;
-  * ) echo Aborting'!'; exit;;
-esac
+if [ "$noprompt" != "$TRUE" ]
+then
+  read -p 'Do you wish to continue? [Y/n]' yn
+  case $yn in
+    [Y]* ) ;;
+    * ) echo Aborting'!'; exit;;
+  esac
+fi
 
 if [ -z "$uff_installed" ]
 then
@@ -108,6 +115,12 @@ echo 'unionfs-fuse#/tmpfs/var=rw:/ro/var=ro /var fuse cow,allow_other,nonempty' 
 echo 'unionfs-fuse#/tmpfs/home=rw:/ro/home=ro /home fuse cow,allow_other' >> $FSTAB
 
 echo fstab rewrite complete
+
+if [ "$noprompt" == "$TRUE" ]
+then
+  reboot
+  exit
+fi
 
 read -p 'Reboot now? [y/n]' yn
 case $yn in
