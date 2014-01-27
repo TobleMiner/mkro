@@ -18,6 +18,13 @@ then
   exit
 fi
 
+if [ -z "$(grep 'tmpfs' '/proc/filesystems')" ]
+then
+  echo 'Support for tmpfs is not enabled/available in your kernel.'
+  echo 'Aborting'
+  exit 1
+fi
+
 sda_main=${1-sda1}
 sda_swap=${2-sda5}
 var_size=${3-256M}
