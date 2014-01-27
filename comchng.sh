@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo '(c) by Tobas Schramm 2014'
+echo '(c) by Tobias Schramm 2014'
 
 ROOTUID=0
 
