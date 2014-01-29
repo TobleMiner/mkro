@@ -17,8 +17,13 @@ DESCR_STD=$DESCR_LOC'10_linux'
 DESCR_HEADER=$DESCR_LOC'00_header'
 
 echo
-echo "Disabling security for standard boot entry"
-sed -i "s/menuentry '\${title}' \${CLASS}/menuentry '\${title}' \${CLASS} --unrestricted/g" $DESCR_STD
+if [ -z "$(grep -o "menuentry '\${title}' \${CLASS} --unrestricted" "$DESCR_STD")" ]
+then
+  echo "Disabling security for standard boot entry"
+  sed -i "s/menuentry '\${title}' \${CLASS}/menuentry '\${title}' \${CLASS} --unrestricted/g" $DESCR_STD
+else
+  echo "Security for standard boot entry allredy disabled"
+fi
 
 echo "Setting boot password"
 echo 'cat << EOF' >> $DESCR_HEADER
