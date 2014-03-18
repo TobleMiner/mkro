@@ -22,7 +22,7 @@ then
   echo "Disabling security for standard boot entry"
   sed -i "s/menuentry '\${title}' \${CLASS}/menuentry '\${title}' \${CLASS} --unrestricted/g" $DESCR_STD
 else
-  echo "Security for standard boot entry allredy disabled"
+  echo "Security for standard boot entry allready disabled"
 fi
 
 echo "Setting boot password"
